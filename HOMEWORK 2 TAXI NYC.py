@@ -173,10 +173,39 @@ for d in df:
 # In[3]:
 DF=pd.concat(dft)
 DF=DF.reset_index(drop=True)
-                                                      
-
-                                                      
-     
+sns.distplot(DF["durations"])  
+# In[4]:                                                   
+zone=pd.read_csv("taxi_zone_lookup.csv")
+dfz=zone[['LocationID','Borough']]    
+ 
+for d in dft:
+    d.rename(columns={'PULocationID':'LocationID'},inplace=True)
+dj=[]
+for d in dft:
+    dj.append(dfz.join(d.set_index('LocationID'), on='LocationID'))    
+dj1=[]
+for d in dj:
+    d=d.reset_index(drop=True)
+    dj1.append(d[["Borough","LocationID","durations"]])
+dj1=pd.concat(dj1)
+dj1=dj1.reset_index(drop=True)
+subset=dj1["Borough"].unique().tolist()
+subset=subset[0:6]  
+# In[5]:                                                       
+for s in subset:
+    l = dj1[dj1['Borough'] == s]
+    l=l.dropna()
+    # Draw the density plot
+    sns.distplot(l['durations'], hist = False, kde = True,
+                 kde_kws = {'linewidth': 3},
+                 label = s)
+    
+# Plot formatting
+plt.legend(prop={'size': 16}, title = 'Duration')
+plt.title('Density Plot with Multiple Borough')
+plt.xlabel('Duration (second)')
+plt.ylabel('Density')
+                                                     
 # # RQ4 What is the most common way of payments? 
 # #### Discover the way payments are executed in each borough and visualize the number of payments for any possible means. Then run the Chi-squared test to see whether the method of payment is correlated to the borough. Then, comment the results.
 
