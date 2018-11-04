@@ -3,10 +3,51 @@
 
 # # NYC Taxi homework2
 
+
+#Data Cleaning phase:
+
+# In[1]:
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from datetime import datetime
+%matplotlib inline
+
+# In[2]:
+error = pd.DataFrame()
+for i in range(1,7):
+    d=pd.read_csv("C:/Users/Atefeh/Desktop/ADM-2/yellow_tripdata_2018-0"+str(i)+".csv")
+    d['yearS'] = pd.to_datetime(d["tpep_pickup_datetime"],format='%Y-%m-%d %H:%M:%S').dt.year
+    d['yearE'] = pd.to_datetime(d["tpep_dropoff_datetime"],format='%Y-%m-%d %H:%M:%S').dt.year
+    d['hourS'] = pd.to_datetime(d["tpep_pickup_datetime"],format='%Y-%m-%d %H:%M:%S').dt.hour
+    d['weekdayS'] = pd.to_datetime(d["tpep_pickup_datetime"],format='%Y-%m-%d %H:%M:%S').dt.weekday
+    d['monthS'] = pd.to_datetime(d["tpep_pickup_datetime"],format='%Y-%m-%d %H:%M:%S').dt.month
+    d['hourE'] = pd.to_datetime(d["tpep_dropoff_datetime"],format='%Y-%m-%d %H:%M:%S').dt.hour
+    d['weekdayE'] = pd.to_datetime(d["tpep_dropoff_datetime"],format='%Y-%m-%d %H:%M:%S').dt.weekday
+    d['monthE'] = pd.to_datetime(d["tpep_dropoff_datetime"],format='%Y-%m-%d %H:%M:%S').dt.month    
+    d=d.loc[(d.yearS==2018)&(d.yearE==2018)&(d.monthS<7)&(d.monthE<7)&(d.trip_distance>0.2)]
+    error = error.append(d[d['monthS']!=i])
+    d.reset_index(drop=True)
+    d.to_csv("Filtered"+str(i)+".csv")
+    del d
+    
+# In[3]:   
+   for i in range(1,7):
+    string_new = "Filtered"+str(i)+".csv"
+    df = pd.read_csv(string_new)
+    new = error.loc[error.monthS==i]
+    df = pd.concat([df,new])
+    df.reset_index(drop=True)
+    df.to_csv("Filtered"+str(i)+".csv")
+    del df
+    del new
+    
 # ## RQ1 In what period of the year Taxis are used more?
 # #### Create a plot that, for each month, shows the average number of trips recorded each day. Due to the differences among New York zones, we want to visualize the same information for each boroughs. Do you notice any difference among them? Provide comments and plausible explanations about what you observe (e.g.: what is the month with the highest daily average?)
 
 # #### First, we imported all the libraries we will use to answer the question
+
 
 # In[11]:
 
@@ -26,15 +67,15 @@ get_ipython().magic('matplotlib inline')
 
 # In[2]:
 
-
 months = 'January February March April May June'.split()
 df_new = pd.Series(index = months)
-for i in range(6):
-    string = "yellow_tripdata_2018-0"+str(i+1)+"_new.csv"
-    df = pd.read_csv(string,usecols=["tpep_pickup_datetime"])
+for i in range(num_plots):
+    string = "Filtered"+str(i+1)+".csv"
+    df = pd.read_csv(string,usecols=["tpep_pickup_datetime","monthS","weekdayS"])
+    df=df.loc[df.monthS==(i+1)]
     df['day'] = pd.to_datetime(df["tpep_pickup_datetime"],format='%Y-%m-%d %H:%M:%S').dt.day
     df.dropna(inplace=True)
-    df_new[months[i]] = len(df['day'])/(len(df['day'].unique()))
+    df_new[months[i]] = len(df)/len((df["day"].unique().tolist()))
     del df
 ax = sns.barplot(x=df_new.index, y=df_new.values)
 ax.set(xlabel='Month', ylabel='Average Trips per Day')
@@ -43,34 +84,24 @@ ax.set(xlabel='Month', ylabel='Average Trips per Day')
 # In[ ]:
 
 
-df_new
-
 
 # #### after this we plot the same graph for every Borough. 
 
 # In[9]:
 
 
+dataframe=[]
 zones = pd.read_csv("taxi_zone_lookup.csv")
-for i in range(6):
-    string = "yellow_tripdata_2018-0"+str(i+1)+"_new.csv"
-    df = pd.read_csv(string,usecols=["tpep_pickup_datetime","DOLocationID","month"])
+for i in range(1,7):
+    df = pd.read_csv("Filtered"+str(i)+".csv",usecols=["tpep_pickup_datetime","monthS","DOLocationID"])
+    df=df.loc[df.monthS==i]
+    df = pd.merge(df,zones[['LocationID','Borough']], left_on=['DOLocationID'], right_on=['LocationID'])[['Borough',"tpep_pickup_datetime","monthS"]]
     df['day'] = pd.to_datetime(df["tpep_pickup_datetime"],format='%Y-%m-%d %H:%M:%S').dt.day
-    df = pd.merge(df,zones[['LocationID','Borough']], left_on=['DOLocationID'], right_on=['LocationID'])[['Borough','day','month']]
-    df.dropna(inplace=True)
-    df = df.groupby(['month','Borough']).count()['day']//(len(df['day'].unique()))
-    if i>0:
-        df_new = pd.concat([df_new,df],axis=1,keys='day')
-        df_new.fillna(0,inplace=True)
-        df_new = df_new.sum(axis=1)
-    else:
-        df_new = df
-    del df
-df_new.rename(index={1:'January',2:'February',3:'March',4:'April',5:'May',6:'June'},inplace=True)
-ax = df_new.unstack(level=0).plot(kind='bar',subplots=False)
-ax.set(ylabel='Average Daily Trips')
-
-
+    df2 =(df.groupby(['monthS','Borough']).count()['day']//len((df["day"].unique().tolist())))
+    dataframe.append(df2)
+    d=pd.concat(dataframe)
+    d.rename(index={1:'January',2:'February',3:'March',4:'April',5:'May',6:'June'},inplace=True)
+    d.unstack(level=0).plot.bar(width=1.0, figsize=(8, 8))
 # # RQ2 What are the time slots with more passengers?
 # #### Set your own time slots and discover which are those when Taxis drive the highest number of passengers overall New York and repeat the analysis for each borough. Provide the results through a visualization and comment them
 
@@ -80,7 +111,7 @@ ax.set(ylabel='Average Daily Trips')
 time_slots = ['1.[1-6 AM]','2.[7-12 AM]','3.[13-18 PM]','4.[19-00 PM]']
 df_total = pd.DataFrame([])
 for month in range(6):
-    string = "yellow_tripdata_2018-0"+str(month+1)+"_new.csv"
+    string = "Filtered"+str(i+1)+".csv""
     df = pd.read_csv(string,usecols=['hour','DOLocationID','passenger_count'])
     df.dropna(inplace=True)
     df_total = df_total.append(df,ignore_index=True)
@@ -121,6 +152,31 @@ fig.set_title('Overall New York')
 # # RQ3 Do the all trips last the same? 
 # #### Let's put our attention on the distribution of trip's duration. Provide a plot for it and comment what you see. Run this analysis for NYC and for each borough (and obviously comment the results!).
 
+# In[1]:
+df=[]
+for i in range(1,7):
+    d = pd.read_csv("Filtered"+str(i)+".csv",usecols=["'tpep_pickup_datetime','tpep_dropoff_datetime','PULocationID','DOLocationID'])
+    d['start-time'] = pd.to_datetime(d['tpep_pickup_datetime'])
+    d['End-time'] = pd.to_datetime(d['tpep_dropoff_datetime'])
+    d["duration"]=d["End-time"]-d["start-time"]
+    d["durationm"]=d["duration"]/pd.Timedelta('1 minute')
+    d["durations"]=d["duration"]/pd.Timedelta('1 second')
+    d['years'] = pd.to_datetime(d["tpep_pickup_datetime"],format='%Y-%m-%d %H:%M:%S').dt.year
+    d['yeare'] = pd.to_datetime(d["tpep_dropoff_datetime"],format='%Y-%m-%d %H:%M:%S').dt.year
+    df.append(d)
+    del d     
+
+# In[2]:                                                      
+dft=[]
+for d in df:
+    dft.append(d.loc[(d.durations>0)&(d.durations<5000)&(d.years==2018)&(d.yeare==2018)&(d.PULocationID!=264)&(d.PULocationID!=265)])
+# In[3]:
+DF=pd.concat(dft)
+DF=DF.reset_index(drop=True)
+                                                      
+
+                                                      
+     
 # # RQ4 What is the most common way of payments? 
 # #### Discover the way payments are executed in each borough and visualize the number of payments for any possible means. Then run the Chi-squared test to see whether the method of payment is correlated to the borough. Then, comment the results.
 
