@@ -170,10 +170,12 @@ for i in range(1,7):
 dft=[]
 for d in df:
     dft.append(d.loc[(d.durations>0)&(d.durations<5000)&(d.years==2018)&(d.yeare==2018)&(d.PULocationID!=264)&(d.PULocationID!=265)])
-# In[3]:
+
+ # In[3]:
 DF=pd.concat(dft)
 DF=DF.reset_index(drop=True)
 sns.distplot(DF["durations"])  
+                                                      
 # In[4]:                                                   
 zone=pd.read_csv("taxi_zone_lookup.csv")
 dfz=zone[['LocationID','Borough']]    
@@ -191,6 +193,7 @@ dj1=pd.concat(dj1)
 dj1=dj1.reset_index(drop=True)
 subset=dj1["Borough"].unique().tolist()
 subset=subset[0:6]  
+                                                      
 # In[5]:                                                       
 for s in subset:
     l = dj1[dj1['Borough'] == s]
@@ -305,7 +308,80 @@ print(correlation)
 # #### -Run the t-test among all the possible pairs of new distribution of different boroughs.
 # #### -Can you say that statistically significant differences, on the averages, hold among zones? In other words, are Taxis trip in some boroughs, on average, more expensive than others?
 # #### -3)Compare the results obtained for the price per mile and the weighted price for mile. What do you think about that?
+                                                      
+# In[1]:
+dft=[]
+for i in range(1,7):
+    df=pd.read_csv("C:/Users/Atefeh/Desktop/ADM2/Filtered"+str(i)+".csv",usecols=['fare_amount','trip_distance','tpep_dropoff_datetime','tpep_pickup_datetime','PULocationID','total_amount'])
+    df["Pricem"]=df["fare_amount"]/df["trip_distance"]
+    df['start-time'] = pd.to_datetime(df['tpep_pickup_datetime'])
+    df['End-time'] = pd.to_datetime(df['tpep_dropoff_datetime'])
+    df["durationm"]=(df["End-time"]-df["start-time"])/pd.Timedelta('1 minute')
+    df["Pricem/m"]=df["Pricem"]/df["durationm"]
+    df=df.loc[(df.durationm>20) & (df.fare_amount>0) & (df.trip_distance>0.1) & (df.total_amount>0.8) & (df.PULocationID!=264) & (df.PULocationID!=265)]
+    df=df.reset_index(drop=True)
+    dft.append(df[["Pricem","PULocationID","Pricem/m"]])
+    del df
+dft=pd.concat(dft)
+dft=dft.reset_index(drop=True)
 
+d=dft.loc[dft.Pricem<10]
+sns.distplot(d['Pricem'],kde=True,bins=15,hist_kws=dict(edgecolor="k", linewidth=2),axlabel="NY")         
+                                                      
+# In[2]:
+zone=pd.read_csv("taxi_zone_lookup.csv")
+dfz=zone[['LocationID','Borough']]
+d.rename(columns={'PULocationID':'LocationID'},inplace=True)
+dfz=dfz.join(d.set_index('LocationID'), on='LocationID')
+dfz=dfz.reset_index(drop=True)   
+                                                      
+# In[3]:
+Boroughs = (dfz["Borough"].unique().tolist())[0:6]
+dm=pd.DataFrame(columns=['mean','std'],index=Boroughs) 
+                                                      
+# In[4]:                                                      
+import matplotlib.pyplot as plt
+i=0
+Boroughs = (dfz["Borough"].unique().tolist())[0:6]
+fig, axes = plt.subplots(6,1,figsize=(30,30))
+for l in Boroughs:
+    a=dfz.loc[dfz.Borough==l]
+    a=a.dropna()
+    m=a["Pricem"].mean()
+    s=a["Pricem"].std()
+    dm.loc[l,"mean"]=m
+    dm.loc[l,"std"]=s
+    #ax_curr = axes[np.where(Boroughs == l)[0][0]]
+    sns.distplot(a['Pricem'],kde=True,bins=20,color='red',hist_kws=dict(edgecolor="k", linewidth=2),ax=axes[i],axlabel=l)
+    #sns.distplot(a['Pricem'],kde=True,bins=15,hist_kws=dict(edgecolor="k", linewidth=2,alpha=0.5),ax=ax_curr,label='Overall New York')
+    #axes.legend()
+    sns.despine()
+    i+=1
+ dm
+
+# In[5]:                                                       
+from scipy import stats
+boroughs=dfz["Borough"].unique().tolist()[0:6]                                                     
+Boroughs1=boroughs     
+idx = pd.MultiIndex.from_product([boroughs,
+                                  ['t-value', 'p-value', 'H0 hypothesis']])
+col = boroughs
+dt = pd.DataFrame('-', idx, col)           
+for i in boroughs:
+    a=dfz.loc[dfz.Borough==i]["Pricem"]
+    a=a.dropna()
+    for j in Boroughs1:
+            b=dfz.loc[dfz.Borough==j]["Pricem"]
+            b=b.dropna()
+            t2, p2 = stats.ttest_ind(a,b)
+            dt.loc[(i,"t-value"),j]=t2
+            dt.loc[(i,"p-value"),j]=p2
+            if(p2>0.05):
+                dt.loc[(i,"H0 hypothesis"),j]='Fail to Reject H0'
+            else:
+                dt.loc[(i,"H0 hypothesis"),j]='Reject H0'  
+ dt                                                     
+#print(dm)                                                      
 # # CRQ2: Visualize Taxis movements! 
 # #### NYC is divided in many Taxis zones. For each yellow cab trip we know the zone the Taxi pick up and drop off the users. Let's visualize, on a chropleth map, the number of trips that starts in each zone. Than, do another map to count the races that end up in the single zone. Comment your discoveries
 
