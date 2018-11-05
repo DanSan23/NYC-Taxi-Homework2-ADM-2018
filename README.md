@@ -17,4 +17,8 @@ and 2 **core research questions**:
 
 * 2)Visualize Taxis movements!
 
+### Data for analysis
+The data for this analysis have been taken from http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
+
+
 
