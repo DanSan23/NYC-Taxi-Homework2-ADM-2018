@@ -23,19 +23,20 @@ The data for this analysis have been taken from http://www.nyc.gov/html/tlc/html
 ### Script
 Each following scripts answers the related question:
 
-* **RQ1.py
+* **RQ1.py**
 
-* **RQ2.py
+* **RQ2.py**
 
-* **RQ3.py
+* **RQ3.py**
 
-* **RQ4.py
+* **RQ4.py**
 
-* **RQ5.py
+* **RQ5.py**
 
-* **CRQ1.py
+* **CRQ1.py**
 
-* **CRQ2.py
+* **CRQ2.py**
+
 * **HOMEWORK 2 TAXI NYC.py** 
 (It contains all the code used to answer each question in a single file)
 
