@@ -20,5 +20,9 @@ and 2 **core research questions**:
 ### Data for analysis
 The data for this analysis have been taken from http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
 
+### Script
+Each following scripts answers the related question
+
+
 
 
