@@ -1,5 +1,5 @@
 # NYC-Taxi-Homework2-ADM-2018
-the following scripts allows to analyze different aspects of the dataset belonging to the new york taxis; specifically, we will answer 5 **research questions**:
+The following scripts allows to analyze different aspects of the dataset belonging to the new york taxis; specifically, we will answer 5 **research questions**:
 
 * 1)In what period of the year Taxis are used more?
 
