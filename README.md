@@ -1,5 +1,5 @@
 # NYC-Taxi-Homework2-ADM-2018
-The following scripts allows to analyze different aspects of the dataset belonging to the new york taxis; specifically, we will answer 5 **research questions**:
+The following scripts allows to analyze different aspects of the dataset belonging to the new york taxis; specifically, we will answer 5 **research questions(RQ)**:
 
 * 1)In what period of the year Taxis are used more?
 
@@ -11,7 +11,7 @@ The following scripts allows to analyze different aspects of the dataset belongi
 
 * 5)Does a long distance correlate with the duration of the trip on average?
 
-and 2 **core research questions**:
+and 2 **core research questions(CRQ)**:
 
 * 1)Does the fare for mile change across NY's borough?
 
@@ -21,7 +21,23 @@ and 2 **core research questions**:
 The data for this analysis have been taken from http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
 
 ### Script
-Each following scripts answers the related question
+Each following scripts answers the related question:
+
+* **RQ1.py
+
+* **RQ2.py
+
+* **RQ3.py
+
+* **RQ4.py
+
+* **RQ5.py
+
+* **CRQ1.py
+
+* **CRQ2.py
+* **HOMEWORK 2 TAXI NYC.py** 
+(It contains all the code used to answer each question in a single file)
 
 
 
