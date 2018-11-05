@@ -13,8 +13,8 @@ the following scripts allows to analyze different aspects of the dataset belongi
 
 and 2 core research questions:
 
-1.Does the fare for mile change across NY's borough?
+* 1)Does the fare for mile change across NY's borough?
 
-2.Visualize Taxis movements!
+* 2)Visualize Taxis movements!
 
 
