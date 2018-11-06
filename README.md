@@ -39,7 +39,7 @@ Each scripts in the repository answers the related question:
 ### Others Scripts
 * **HOMEWORK 2 TAXI NYC.py** 
 (It contains all the code used to answer each question in a single file)
-* **Analysis for other years**
+* **Analysis for other years.ipynb**
 (It contains the analysis for years 2017,2016,2015)
 
 
