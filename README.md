@@ -36,7 +36,7 @@ Each scripts in the repository answers the related question:
 * **CRQ1.py**
 
 * **CRQ2.py**
-### Others Scripts
+### Others files
 * **HOMEWORK 2 TAXI NYC.py** 
 (It contains all the code used to answer each question in a single file)
 * **Analysis for other years.ipynb**
