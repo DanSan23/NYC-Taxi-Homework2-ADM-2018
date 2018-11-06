@@ -20,7 +20,7 @@ and 2 **core research questions(CRQ)**:
 ### Data for analysis
 The data for this analysis have been taken from http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
 
-### Script
+### Main Scripts
 Each scripts in the repository answers the related question:
 
 * **RQ1.py**
@@ -36,7 +36,7 @@ Each scripts in the repository answers the related question:
 * **CRQ1.py**
 
 * **CRQ2.py**
-
+### Others Scripts
 * **HOMEWORK 2 TAXI NYC.py** 
 (It contains all the code used to answer each question in a single file)
 
