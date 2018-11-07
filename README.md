@@ -21,24 +21,9 @@ and 2 **core research questions(CRQ)**:
 The data for this analysis have been taken from http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
 
 ### Main Scripts
-Each scripts in the repository answers the related question:
-
-* **RQ1.py**
-
-* **RQ2.py**
-
-* **RQ3.py**
-
-* **RQ4.py**
-
-* **RQ5.py**
-
-* **CRQ1.py**
-
-* **CRQ2.py**
-### Others files
-* **HOMEWORK 2 TAXI NYC.py** 
+* **HOMEWORK 2 TAXI NYC.ipynb** 
 (It contains all the code used to answer each question in a single file)
+### Others files
 * **Analysis for year 2017.ipynb**
 (It contains the analysis for year 2017)
 * **Comparison between 2018 and 2017.ipynb**
