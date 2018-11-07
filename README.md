@@ -21,7 +21,7 @@ and 2 **core research questions(CRQ)**:
 The data for this analysis have been taken from http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml
 
 ### Main Scripts
-* **HOMEWORK 2 TAXI NYC.ipynb** 
+* **Homework_2.ipynb** 
 (It contains all the code used to answer each question in a single file)
 ### Others files
 * **Analysis for year 2017.ipynb**
