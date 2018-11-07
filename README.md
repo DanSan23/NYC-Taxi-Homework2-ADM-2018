@@ -41,6 +41,8 @@ Each scripts in the repository answers the related question:
 (It contains all the code used to answer each question in a single file)
 * **Analysis for year 2017.ipynb**
 (It contains the analysis for year 2017)
+* **Comparison between 2018 and 2017**
+(it contains the comparison between the analyzes of 2018 and 2017
 
 
 
